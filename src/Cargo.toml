@@ -1,0 +1,2 @@
+[workspace]
+members = ["recurring-payments-service"]

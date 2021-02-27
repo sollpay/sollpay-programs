@@ -1,0 +1,6 @@
+/node_modules
+/store
+/.cargo
+/dist
+.env
+keypair.json
