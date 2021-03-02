@@ -16,6 +16,8 @@ pub enum RecurringPaymentsInstruction {
     /// 3. `[writable]` The RecurringPayments account, it will hold all necessary info about the trade.
     /// 4. `[]` The clock sysvar
     CreateSubscriptionPlan {
+        /// nonce used to create valid program address
+        nonce: u8,
         /// Length of the subscription (1 Month ususally) in days
         subscription_timeframe: u64,
         /// max amount that can be withdrawn in one timeframe
@@ -48,10 +50,12 @@ impl RecurringPaymentsInstruction {
 
         Ok(match tag {
             0 => {
+                let (&nonce, src) = src.split_first().ok_or(RecurringPaymentsError::InvalidInstruction)?;
                 let (subscription_timeframe, src) = Self::unpack_u64(src)?;
                 let (max_amount, _src) = Self::unpack_u64(src)?;
 
                 Self::CreateSubscriptionPlan {
+                    nonce,
                     subscription_timeframe,
                     max_amount,
                 }

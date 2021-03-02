@@ -13,7 +13,7 @@ pub struct Subscription {
   pub is_initialized: bool,
   pub is_approved: bool, // true if the subscription is active
   pub subscription_plan_account: Pubkey,
-  pub token_address: Pubkey, // customer that allowed for withdraw
+  pub token_account: Pubkey,
   pub owner: Pubkey,
   // pub customer: Pubkey,            // customer that allowed for withdraw
   // pub payout_address: Pubkey,      // address of the Business that can withdraw
@@ -57,8 +57,8 @@ impl Pack for Subscription {
         .try_into()
         .map_err(|_| ProgramError::InvalidAccountData)?,
     );
-    let (token_address, src) = src.split_at(32);
-    let token_address = Pubkey::new_from_array(token_address.try_into().map_err(|_| ProgramError::InvalidAccountData)?);
+    let (token_account, src) = src.split_at(32);
+    let token_account = Pubkey::new_from_array(token_account.try_into().map_err(|_| ProgramError::InvalidAccountData)?);
     let (owner, src) = src.split_at(32);
     let owner = Pubkey::new_from_array(owner.try_into().map_err(|_| ProgramError::InvalidAccountData)?);
 
@@ -87,7 +87,7 @@ impl Pack for Subscription {
       is_initialized,
       is_approved,
       subscription_plan_account,
-      token_address,
+      token_account,
       owner,
       cycle_start,
       subscription_timeframe,
@@ -102,7 +102,7 @@ impl Pack for Subscription {
       is_initialized_dst,
       is_approved_dst,
       subscription_plan_account_dst,
-      token_address_dst,
+      token_account_dst,
       owner_dst,
       cycle_start_dst,
       subscription_timeframe_dst,
@@ -110,11 +110,11 @@ impl Pack for Subscription {
       withdrawn_amount_dst,
     ) = mut_array_refs![dst, 1, 1, 32, 32, 32, 8, 8, 8, 8];
 
-    let Self {
+    let &Subscription {
       is_initialized,
       is_approved,
       ref subscription_plan_account,
-      ref token_address,
+      ref token_account,
       ref owner,
       cycle_start,
       subscription_timeframe,
@@ -122,10 +122,10 @@ impl Pack for Subscription {
       withdrawn_amount,
     } = self;
 
-    is_approved_dst[0] = *is_approved as u8;
-    is_initialized_dst[0] = *is_initialized as u8;
+    is_approved_dst[0] = is_approved as u8;
+    is_initialized_dst[0] = is_initialized as u8;
     *subscription_plan_account_dst = subscription_plan_account.to_bytes();
-    *token_address_dst = token_address.to_bytes();
+    *token_account_dst = token_account.to_bytes();
     *owner_dst = owner.to_bytes();
     *cycle_start_dst = cycle_start.to_le_bytes();
     *subscription_timeframe_dst = subscription_timeframe.to_le_bytes();

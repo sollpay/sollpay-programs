@@ -8,7 +8,7 @@ import { estCostLoadProgram, loadProgram } from './../deploy'
 
 import * as fs from 'fs'
 
-const pathToProgram = 'dist/program/recurring-payments-service.so'
+const pathToProgram = 'dist/program/recurring-payments.so'
 
 async function main() {
   console.log('Deploying...')
@@ -28,7 +28,7 @@ async function main() {
 
   // NB: the use of this store is just a convenience, nothing fundamental is going on here
 
-  const s = await getStore(connection, 'recurring-payments-service.json')
+  const s = await getStore(connection, 'recurring-payments.json')
 
   if (s.inStore === true) {
     console.log(
@@ -70,7 +70,7 @@ async function main() {
     ') Sol'
   )
 
-  await setStore('recurring-payments-service.json', programId)
+  await setStore('recurring-payments.json', programId)
 
   console.log('-----')
 }

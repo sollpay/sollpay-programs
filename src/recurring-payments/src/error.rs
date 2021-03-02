@@ -9,11 +9,17 @@ use thiserror::Error;
 pub enum RecurringPaymentsError {
   /// Invalid instruction number passed in.
   #[error("Invalid instruction")]
-  InvalidInstruction,  
+  InvalidInstruction,
   #[error("Invalid max amount")]
-  InvalidMaxAmount, 
+  InvalidMaxAmount,
   #[error("Invalid subscription timeframe")]
   InvalidSubscriptionTimeframe,
+  #[error("Invalid program address generated from nonce and key")]
+  InvalidProgramAddress,
+  #[error("The provided token program does not match the expected token program")]
+  IncorrectTokenProgramId,
+  #[error("Deserialized account is not an SPL Token account")]
+  ExpectedAccount,
 }
 
 impl From<RecurringPaymentsError> for ProgramError {
